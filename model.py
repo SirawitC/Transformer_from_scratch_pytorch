@@ -3,10 +3,9 @@ import torch.nn as nn
 import math
 
 class InputEmbedding(nn.Module):
-    def __init__(self, d_model: int, vocab_size: int):
+    def __init__(self, d_model: int, vocab_size: int) -> None:
         super().__init__()
         self.d_model = d_model
-        self.vocab_size = vocab_size
         self.embedding = nn.Embedding(vocab_size, d_model)
 
     def forward(self, x):
@@ -15,8 +14,6 @@ class InputEmbedding(nn.Module):
 class PositionalEncoding(nn.Module):
     def __init__(self, d_model: int, seq_len: int, dropout: float) -> None:
         super().__init__()
-        self.d_model = d_model
-        self.seq_len = seq_len
         self.dropout = nn.Dropout(dropout)
 
         # initialize matrix of size (seq_len X d_model)
@@ -38,7 +35,6 @@ class PositionalEncoding(nn.Module):
         return self.dropout(x)
 
 class LayerNormalization(nn.Moduel):
-
     def __init__(self, epsilon: float = 10**-6) -> None:
         super().__init__()
         self.epsilon = epsilon
@@ -50,4 +46,19 @@ class LayerNormalization(nn.Moduel):
         std = x.std(dim = -1, keepdim=True)
         return self.alpha * (x - mean) / (std + self.epsilon) + self.bias
     
+class FeedForwardBlock(nn.Module):
+    def __init__(self, d_model: int, d_ff: int, dropout: float) -> None:
+        super().__init__()
+        self.linear1 = nn.Linear(d_model, d_ff) # W1 and b1
+        self.dropout = nn.Dropout(dropout)
+        self.linear2 = nn.Linear(d_ff, d_model) # W2 and b2
+
+    def forward(self, x):
+        x = self.linear1(x) # (batch, seq_len, d_model) --> (batch, seq_len, d_ff)
+        x = torch.relu(x)  
+        x = self.dropout(x)  
+        out = self.linear2(x) # (batch, seq_len, d_ff) --> (batch, seq_len, d_model) 
+        return out
+
+
     

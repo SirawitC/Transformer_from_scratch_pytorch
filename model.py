@@ -34,5 +34,20 @@ class PositionalEncoding(nn.Module):
         self.register_buffer('pe', pe)
 
     def forward(self, x):
-        x = x + (self.pe[:, :x.shape[1], :]).requires_grad(False)
+        x = x + (self.pe[:, :x.shape[1], :]).requires_grad_(False)
         return self.dropout(x)
+
+class LayerNormalization(nn.Moduel):
+
+    def __init__(self, epsilon: float = 10**-6) -> None:
+        super().__init__()
+        self.epsilon = epsilon
+        self.alpha = nn.Parameter(torch.ones(1)) # Multiplicative
+        self.bias = nn.Parameter(torch.zeros(1)) # Additive
+
+    def forward(self, x):
+        mean = x.mean(dim = -1, keepdim=True)
+        std = x.std(dim = -1, keepdim=True)
+        return self.alpha * (x - mean) / (std + self.epsilon) + self.bias
+    
+    

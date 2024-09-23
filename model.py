@@ -34,7 +34,7 @@ class PositionalEncoding(nn.Module):
         x = x + (self.pe[:, :x.shape[1], :]).requires_grad_(False)
         return self.dropout(x)
 
-class LayerNormalization(nn.Moduel):
+class LayerNormalization(nn.Module):
     def __init__(self, epsilon: float = 10**-6) -> None:
         super().__init__()
         self.epsilon = epsilon

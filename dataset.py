@@ -12,14 +12,14 @@ class BilingualDataset(Dataset):
         self.lang_tgt = lang_tgt
         self.seq_len = seq_len
 
-        self.sos_token = torch.Tensor([tokenizer_src.token_to_id(['[SOS]'])], dtype=torch.int64)
-        self.eos_token = torch.Tensor([tokenizer_src.token_to_id(['[EOS]'])], dtype=torch.int64)
-        self.pad_token = torch.Tensor([tokenizer_src.token_to_id(['[PAD]'])], dtype=torch.int64)
+        self.sos_token = torch.tensor([tokenizer_src.token_to_id('[SOS]')], dtype=torch.int64)
+        self.eos_token = torch.tensor([tokenizer_src.token_to_id('[EOS]')], dtype=torch.int64)
+        self.pad_token = torch.tensor([tokenizer_src.token_to_id('[PAD]')], dtype=torch.int64)
 
     def __len__(self):
         return len(self.dataset)
     
-    def __getitem__(self, index: Any) -> Any:
+    def __getitem__(self, index):
         src_tgt_pair = self.dataset[index]
         src_text = src_tgt_pair['translation'][self.lang_src]
         tgt_text = src_tgt_pair['translation'][self.lang_tgt]

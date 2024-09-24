@@ -70,7 +70,7 @@ def get_dataset(config):
     return train_dataloader, test_dataloader, tokenizer_src, tokenizer_tgt
 
 def get_model(config, vocab_src_len, vocab_tgt_len):
-    model = build_transformer(vocab_src_len, vocab_tgt_len, config["seq_len"], config["seq_len"], config["d_model"])
+    model = build_transformer(vocab_src_len, vocab_tgt_len, config["seq_len"], config["seq_len"], config["d_model"], config["num_block"], config["num_head"], config["dropout"], config["d_ff"])
     return model
 
 def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_len, device):

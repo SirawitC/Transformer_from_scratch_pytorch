@@ -11,7 +11,7 @@ from datasets import load_dataset
 from tokenizers import Tokenizer
 from tokenizers.models import WordLevel, WordPiece
 from tokenizers.trainers import WordLevelTrainer, WordPieceTrainer
-from tokenizers.pre_tokenizers import Whitespace, ByteLevel
+from tokenizers.pre_tokenizers import Whitespace, BertPreTokenizer
 
 from torch.utils.tensorboard import SummaryWriter
 
@@ -40,7 +40,7 @@ def get_or_build_tokenizer_non_space(config, dataset, lang):
     tokenizer_path = Path(config["tokenizer_file"].format(lang))
     if not Path.exists(tokenizer_path):
         tokenizer = Tokenizer(WordPiece(unk_token="[UNK]"))
-        tokenizer.pre_tokenizer = ByteLevel()
+        tokenizer.pre_tokenizer = BertPreTokenizer()
         trainer = WordPieceTrainer(special_tokens=["[UNK]", "[PAD]", "[SOS]", "[EOS]"], min_frequency=2)
         tokenizer.train_from_iterator(get_all_sentences(dataset, lang), trainer=trainer)
         tokenizer.save(str(tokenizer_path))

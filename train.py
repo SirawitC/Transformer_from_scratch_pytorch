@@ -23,7 +23,7 @@ def get_all_sentences(dataset, lang):
     for item in dataset:
         yield item["translation"][lang]
 
-def get_or_guild_tokenizer(config, dataset, lang):
+def get_or_build_tokenizer(config, dataset, lang):
     # config["tokenizer_file"] = "../tokenizer_{0}.json"
     tokenizer_path = Path(config["tokenizer_file"].format(lang))
     if not Path.exists(tokenizer_path):
@@ -40,8 +40,8 @@ def get_dataset(config):
     dataset_raw = load_dataset(f'{config["hf_dataset"]}', f'{config["lang_src"]}-{config["lang_tgt"]}', split="train")
 
     # build tokenizer
-    tokenizer_src = get_or_guild_tokenizer(config, dataset_raw, config["lang_src"])
-    tokenizer_tgt = get_or_guild_tokenizer(config, dataset_raw, config["lang_tgt"])
+    tokenizer_src = get_or_build_tokenizer(config, dataset_raw, config["lang_src"])
+    tokenizer_tgt = get_or_build_tokenizer(config, dataset_raw, config["lang_tgt"])
 
     # train test split 
     train_split_len = int(config["train_split_ratio"] * len(dataset_raw))
@@ -204,7 +204,7 @@ def train_model(config):
             global_step += 1
 
         run_validation(model, test_dataloader, tokenizer_src, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step, writer)
-        
+
         # Save the model
         model_filename = get_weights_file_path(config, f'{epoch:02d}')
         torch.save({

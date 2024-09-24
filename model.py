@@ -65,7 +65,7 @@ class MultiHeadAttentionBlock(nn.Module):
         super().__init__()
         self.d_model = d_model
         self.num_head = num_head
-        assert d_model % num_head == 0, 'ValueError: d_model must be divisible by num_head'
+        assert d_model % num_head == 0, 'd_model must be divisible by num_head'
 
         self.d_k = d_model // num_head
         self.w_q = nn.Linear(d_model, d_model)

@@ -1,6 +1,7 @@
 ﻿# Transformer from scratch using Pytorch
 
 ## Table of Contents
+
 - [Introduction](#Introduction)
 - [Core Components](#Core-Components)
   - [Input Embedding](#Input-Embedding)
@@ -14,6 +15,7 @@
   - [Decoder](#Decoder)
 - [Training Loop](#Training-Loop)
 - [Inference](#Inference)
+- [License](#license)
 
 ## Introduction
 
@@ -40,3 +42,7 @@
 ## Training Loop
 
 ## Inference
+
+## License
+
+This code is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.

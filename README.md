@@ -29,9 +29,9 @@ When talking about something called a "Transformer", surely, each individual wou
 Now without further ado, let's get to know this marvel of technology thoroughly starting with the overall architecture of a transformer.
 
 <p align="center">
-  <img src="./img/transformer.png" alt="transformer"/>
+  <img src="./img/transformer.png" alt="transformer" width="300" height="400"/>
 </p>
-<b><i><p align="center" >The Transformer Architecture - from Attention is all you need paper</p></i></b>
+<b><i><p align="center">The Transformer Architecture - from Attention is all you need paper</p></i></b>
 
 ## Core Components
 

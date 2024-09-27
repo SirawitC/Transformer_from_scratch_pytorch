@@ -23,7 +23,14 @@ This repository provides a step-by-step implementation of the Transformer archit
 - [License](#license)
 
 ## Introduction
-When talking about something called a "Transformer", surely, each individual would have a different image in their mind. Many might associate this word with nostalgic movies/toys/cartoons regarding alien robots like Optimus Prime, while those with an electrical engineering background may think of a passive component for altering the voltage. Recently, it seem like computer and ML scientists, have just came up with a new definition of this word. Transformer architecture originally proposed in the groundbreaking paper "[attention is all you need](https://arxiv.org/abs/1706.03762)", has revolutionized the field of natural language processing and beyond, becoming the backbone of many modern AI models.   
+When talking about something called a "Transformer", surely, each individual would have a different image in their mind. Many might associate this word with nostalgic movies/toys/cartoons regarding alien robots like Optimus Prime, while those with an electrical engineering background may think of a passive component for altering the voltage. Recently, computer and ML scientists, have also come up with a new definition of this word. Transformer architecture originally proposed in the groundbreaking paper "[attention is all you need](https://arxiv.org/abs/1706.03762)", was initially introduced to address several limitations and flaws of recurrent neural networks (RNNs), especially in the context of tasks like neural machine translation (NMT) and other sequence-to-sequence tasks. Since then it has become a revolutionary foundation for the field of natural language processing and beyond, serving as the backbone of many modern AI models. A marvelous technology like chatGPT or even a more accurate language translator that we take for granted, would not be possible without this vital architecture as its constituent. It would not be far-fetched to say that this transformer model is a spark for this new era of artificial intelligence technology.
+
+Now without further ado, let's get to know this marvel of technology thoroughly starting with the overall architecture of a transformer.
+
+<p align="center">
+  <img src="" alt="transformer"/>
+</p>
+
 
 ## Core Components
 

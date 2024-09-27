@@ -8,6 +8,7 @@ This repository provides a step-by-step implementation of the Transformer archit
 
 - [Introduction](#Introduction)
 - [Core Components](#Core-Components)
+  - [Tokenizer](#Tokenizer)
   - [Input Embedding](#Input-Embedding)
   - [Positional Encoding](#Positional-Encoding)
   - [Multi-Head Attention](#Multi-Head-Attention)
@@ -25,10 +26,14 @@ This repository provides a step-by-step implementation of the Transformer archit
 
 ## Core Components
 
+### Tokenizer
+
 ### Input Embedding
+
 <p align="center">
   <img src="./img/input_embed.png" alt="input_embed"/>
 </p>
+
 ### Positional Encoding
 
 ### Multi-Head Attention

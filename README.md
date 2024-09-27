@@ -23,6 +23,7 @@ This repository provides a step-by-step implementation of the Transformer archit
 - [License](#license)
 
 ## Introduction
+When talking about something called a "Transformer", surely, each individual would have a different image in their mind. Many might associate this word with nostalgic movies/toys/cartoons regarding alien robots like Optimus Prime, while those with an electrical engineering background may think of a passive component for altering the voltage. Recently, it seem like computer and ML scientists, have just came up with a new definition of this word.   
 
 ## Core Components
 

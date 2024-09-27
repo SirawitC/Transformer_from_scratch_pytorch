@@ -40,7 +40,7 @@ Now without further ado, let's get to know this marvel of technology thoroughly 
 ### Input Embedding
 
 <p align="center">
-  <img src="./img/input_embed.png" alt="input_embed" width="700" height="450"/>
+  <img src="./img/input_embed.png" alt="input_embed" width="700"/>
 </p>
 
 ### Positional Encoding

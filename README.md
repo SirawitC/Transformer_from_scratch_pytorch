@@ -28,7 +28,7 @@ When talking about something called a "Transformer", surely, each individual wou
 Now without further ado, let's get to know this marvel of technology thoroughly starting with the overall architecture of a transformer.
 
 <p align="center">
-  <img src="" alt="transformer"/>
+  <img src="./img/transformer.png" alt="transformer"/>
 </p>
 
 

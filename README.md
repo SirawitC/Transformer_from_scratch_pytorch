@@ -26,7 +26,9 @@ This repository provides a step-by-step implementation of the Transformer archit
 ## Core Components
 
 ### Input Embedding
-
+<p align="center">
+  <img src="./img/input_embed.png" alt="input_embed"/>
+</p>
 ### Positional Encoding
 
 ### Multi-Head Attention

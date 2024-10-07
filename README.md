@@ -40,6 +40,14 @@ Now without further ado, let's get to know this marvel of technology thoroughly 
 
 A tokenizer is a vital component for various tasks in machine learning, especially for natural language processing (NLP). The main functionality of this module is to preprocess the raw input text in a way that makes it easier for the machine to deal with afterward. Simply put, the tokenizer module is responsible for breaking down sentences or paragraphs into smaller and more manageable chunks called **tokens**, which can either be words, subwords, or even individual characters, depending on the type of tokenizer used.
 
+A tokenizer is a vital component for various tasks in machine learning, especially for natural language processing (NLP). The main functionality of this module is to preprocess the raw input text in a way that makes it easier for the machine to deal with afterward. Simply put, the tokenizer module is responsible for breaking down sentences or paragraphs into smaller and more manageable chunks called **tokens**, which can be words, subwords, or even individual characters, depending on the type of tokenizer used.
+
+Here are 3 main types of tokenizer.
+
+- **Word-level tokenization**
+- **Character-level tokenization**
+- **subword-level tokenization**
+
 ### Input Embedding
 
 <p align="center">

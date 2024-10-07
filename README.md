@@ -15,6 +15,7 @@ This repository provides a step-by-step implementation of the Transformer archit
   - [FeedForward Block](#FeedForward-Block)
   - [Residual Connection](#Residual-Connection)
   - [Layer Normalization](#Layer-Normalization)
+  - [Projection Layer](#projection-layer)
 - [Transformer Model](#Transformer-Model)
   - [Encoder](#Encoder)
   - [Decoder](#Decoder)
@@ -36,9 +37,13 @@ Now without further ado, let's get to know this marvel of technology thoroughly 
 ## Core Components
 
 ### Tokenizer
-A tokenizer is a vital component for various tasks in machine learning, especially for natural language processing (NLP). The main functionality of this module is to preprocess the raw input text in a way that makes it easier for the machine to deal with afterward. Simply put, the tokenizer module is responsible for breaking down sentences or paragraphs into smaller and more manageable chunks called **tokens**, which can be words, subwords, or even individual characters, depending on the type of tokenizer used. 
+
+A tokenizer is a vital component for various tasks in machine learning, especially for natural language processing (NLP). The main functionality of this module is to preprocess the raw input text in a way that makes it easier for the machine to deal with afterward. Simply put, the tokenizer module is responsible for breaking down sentences or paragraphs into smaller and more manageable chunks called **tokens**, which can either be words, subwords, or even individual characters, depending on the type of tokenizer used.
+
+A tokenizer is a vital component for various tasks in machine learning, especially for natural language processing (NLP). The main functionality of this module is to preprocess the raw input text in a way that makes it easier for the machine to deal with afterward. Simply put, the tokenizer module is responsible for breaking down sentences or paragraphs into smaller and more manageable chunks called **tokens**, which can be words, subwords, or even individual characters, depending on the type of tokenizer used.
 
 Here are 3 main types of tokenizer.
+
 - **Word-level tokenization**
 - **Character-level tokenization**
 - **subword-level tokenization**
@@ -49,15 +54,154 @@ Here are 3 main types of tokenizer.
   <img src="./img/input_embed.png" alt="input_embed" width="700"/>
 </p>
 
+```python
+class InputEmbedding(nn.Module):
+    def __init__(self, d_model: int, vocab_size: int) -> None:
+        super().__init__()
+        self.d_model = d_model
+        self.embedding = nn.Embedding(vocab_size, d_model)
+
+    def forward(self, x):
+        return self.embedding(x) * math.sqrt(self.d_model)
+```
+
 ### Positional Encoding
+
+```python
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model: int, seq_len: int, dropout: float) -> None:
+        super().__init__()
+        self.dropout = nn.Dropout(dropout)
+
+        # initialize matrix of size (seq_len X d_model)
+        pe = torch.zeros(seq_len, d_model)
+
+        # initialize the vector of position of size (seq_len, 1)
+        position = torch.arange(0, seq_len, dtype=torch.float).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0)/d_model))
+        # apply sin to even and cos to odd position
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+
+        pe = pe.unsqueeze(0) # size (1, seq_len, d_model)
+
+        self.register_buffer('pe', pe)
+
+    def forward(self, x):
+        x = x + (self.pe[:, :x.shape[1], :]).requires_grad_(False)
+        return self.dropout(x)
+```
 
 ### Multi-Head Attention
 
+```python
+class MultiHeadAttentionBlock(nn.Module):
+    def __init__(self, d_model: int, num_head: int, dropout: float) -> None:
+        super().__init__()
+        self.d_model = d_model
+        self.num_head = num_head
+        assert d_model % num_head == 0, 'd_model must be divisible by num_head'
+
+        self.d_k = d_model // num_head
+        self.w_q = nn.Linear(d_model, d_model)
+        self.w_k = nn.Linear(d_model, d_model)
+        self.w_v = nn.Linear(d_model, d_model)
+
+        self.w_o = nn.Linear(d_model, d_model)
+        self.dropout = nn.Dropout(dropout)
+
+    @staticmethod
+    def attention(query, key, value, mask, dropout: nn.Dropout):
+        d_k = query.shape[-1]
+
+        # (batch, num_head, seq_len, d_k) --> (batch, num_head, seq_len, seq_len)
+        attention_score = (query @ key.transpose(-2, -1)) / math.sqrt(d_k)
+        if mask is not None:
+            attention_score.masked_fill_(mask == 0, -1e9)
+        attention_score = attention_score.softmax(dim=-1) # (batch, num_head, seq_len, seq_len)
+        if dropout is not None:
+            attention_score = dropout(attention_score)
+
+        return (attention_score @ value), attention_score
+
+    def forward(self, q, k, v, mask):
+        query = self.w_q(q) # (batch, seq_len, d_model) --> (batch, seq_len, d_model)
+        key = self.w_k(k) # (batch, seq_len, d_model) --> (batch, seq_len, d_model)
+        value = self.w_v(v) # (batch, seq_len, d_model) --> (batch, seq_len, d_model)
+
+        # (batch, seq_len, d_model) --> (batch, seq_len, num_head, d_k) --> (batch, num_head, seq_len, d_k)
+        query = query.view(query.shape[0], query.shape[1], self.num_head, self.d_k).transpose(1,2)
+        key = key.view(key.shape[0], key.shape[1], self.num_head, self.d_k).transpose(1,2)
+        value = value.view(value.shape[0], value.shape[1], self.num_head, self.d_k).transpose(1,2)
+
+        x, self.attention_score = MultiHeadAttentionBlock.attention(query, key, value, mask, self.dropout)
+
+        # (batch, num_head, seq_len, d_k) --> (batch, seq_len, num_head, d_k) --> (batch, seq_len, d_model)
+        x = x.transpose(1,2).contiguous().view(x.shape[0], -1, self.num_head*self.d_k)
+
+        # (batch, seq_len, d_model) --> (batch, seq_len, d_model)
+        return self.w_o(x)
+```
+
 ### FeedForward Block
+
+```python
+class FeedForwardBlock(nn.Module):
+    def __init__(self, d_model: int, d_ff: int, dropout: float) -> None:
+        super().__init__()
+        self.linear1 = nn.Linear(d_model, d_ff) # W1 and b1
+        self.dropout = nn.Dropout(dropout)
+        self.linear2 = nn.Linear(d_ff, d_model) # W2 and b2
+
+    def forward(self, x):
+        x = self.linear1(x) # (batch, seq_len, d_model) --> (batch, seq_len, d_ff)
+        x = torch.relu(x)
+        x = self.dropout(x)
+        out = self.linear2(x) # (batch, seq_len, d_ff) --> (batch, seq_len, d_model)
+        return out
+```
 
 ### Residual Connection
 
+```python
+class ResidualConnection(nn.Module):
+    def __init__(self, dropout: float) -> None:
+        super().__init__()
+        self.dropout = nn.Dropout(dropout)
+        self.norm = LayerNormalization()
+
+    def forward(self, x, sublayer):
+        return x + self.dropout(sublayer(self.norm(x)))
+```
+
 ### Layer Normalization
+
+```python
+class LayerNormalization(nn.Module):
+    def __init__(self, epsilon: float = 10**-6) -> None:
+        super().__init__()
+        self.epsilon = epsilon
+        self.alpha = nn.Parameter(torch.ones(1)) # Multiplicative
+        self.bias = nn.Parameter(torch.zeros(1)) # Additive
+
+    def forward(self, x):
+        mean = x.mean(dim = -1, keepdim=True)
+        std = x.std(dim = -1, keepdim=True)
+        return self.alpha * (x - mean) / (std + self.epsilon) + self.bias
+```
+
+### Projection Layer
+
+```python
+class ProjectionLayer(nn.Module):
+    def __init__(self, d_model: int, vocab_size: int) -> None:
+        super().__init__()
+        self.projection = nn.Linear(d_model, vocab_size)
+
+    def forward(self, x):
+        # (batch, seq_len, d_model) --> (batch, seq_len, vocab_size)
+        return torch.log_softmax(self.projection(x), dim=-1)
+```
 
 ## Transformer Model
 
@@ -66,6 +210,81 @@ Here are 3 main types of tokenizer.
 ### Decoder
 
 ## Training Loop
+
+```python
+def train_model(config):
+    # Define the device
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f'Device: {device}')
+
+    Path(config["model_folder"]).mkdir(parents=True, exist_ok=True)
+
+    train_dataloader, test_dataloader, tokenizer_src, tokenizer_tgt = get_dataset(config)
+    model = get_model(config, tokenizer_src.get_vocab_size(), tokenizer_tgt.get_vocab_size()).to(device)
+
+    # Initialize tensorboard
+    writer = SummaryWriter(config["experiment_name"])
+
+    optimizer = torch.optim.Adam(model.parameters(), lr=config["lr"], eps=1e-9)
+
+    initial_epoch = 0
+    global_step = 0
+    if config["preload"]:
+        model_filename = get_weights_file_path(config, config["preload"])
+        print(f"Preloading model {model_filename}")
+        state = torch.load(model_filename)
+        initial_epoch = state["epoch"] + 1
+        optimizer.load_state_dict(state["optimizer_state_dict"])
+        global_step = state["global_step"]
+
+    loss_fn = nn.CrossEntropyLoss(ignore_index=tokenizer_src.token_to_id('[PAD]'), label_smoothing=0.1).to(device)
+
+    for epoch in range(initial_epoch, config["num_epochs"]):
+        batch_iterator = tqdm(train_dataloader, desc=f"Processing Epoch {epoch: 02d}")
+
+        for batch in batch_iterator:
+            model.train()
+
+            encoder_input = batch["encoder_input"].to(device) # (batch, seq_len)
+            decoder_input = batch["decoder_input"].to(device) # (batch, seq_len)
+            encoder_mask = batch["encoder_mask"].to(device) # (batch, 1, 1, seq_len)
+            decoder_mask = batch["decoder_mask"].to(device) # (batch, 1, seq_len, seq_len)
+
+            # Run tensor through the transformer
+            encoder_output = model.encode(encoder_input, encoder_mask) # (batch, seq_len, d_model)
+            decoder_output = model.decode(encoder_output, encoder_mask, decoder_input, decoder_mask) # (batch, seq_len, d_model)
+            proj_output = model.project(decoder_output) # (batch, seq_len, tgt_vocab_size)
+
+            label = batch["label"].to(device) # (batch, seq_len)
+
+            # (batch, seq_len, tgt_vocab_size) --> (batch * seq_len, tgt_vocab_size)
+            loss = loss_fn(proj_output.view(-1, tokenizer_tgt.get_vocab_size()), label.view(-1))
+            batch_iterator.set_postfix({f"Loss": f"{loss.item():6.3f}"})
+
+            # Log the loss
+            writer.add_scalar('train loss', loss.item(), global_step)
+            writer.flush()
+
+            # Backprop the loss
+            loss.backward()
+
+            # Update the weights
+            optimizer.step()
+            optimizer.zero_grad()
+
+            global_step += 1
+
+        run_validation(model, test_dataloader, tokenizer_src, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step, writer)
+
+        # Save the model
+        model_filename = get_weights_file_path(config, f'{epoch:02d}')
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'global_step': global_step
+        }, model_filename)
+```
 
 ## Inference
 

@@ -58,7 +58,7 @@ Subsequent to the tokenization process, any given input text can be breakdown in
 </p>
 <b><i><p align="center">An example of input and output of embeding layer</p></i></b>
 
-Notice that, from the figure the same word 'dog' is assigned to the same token ID and hence having the same vector embedding output. This imply that, with solely the input embedding technique, it is not yet possible to distingush the same word regarding its order within the input sequence. This limitation give rise to the need for developing the next component, the positional encoding.
+Notice that, from the figure, the same word 'dog' is assigned to the same token ID and hence having the same vector embedding output. This imply that, with solely the input embedding technique, it is not yet possible to distingush the same word regarding its order/position within the input sequence. This limitation give rise to the need for developing the next component, the positional encoding.
 
 **Input embedding implementation**
 

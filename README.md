@@ -45,7 +45,7 @@ A tokenizer is a vital component for various tasks in machine learning, especial
 
 Here are 3 main types of tokenizer.
 
-- **Word-level tokenization**
+- **Word-level tokenization**: Split text into individual words based on the presence of a delimiter such as whitespace, commas, etc. It is arguably one of the most intuitive types of tokenizer and well-suited for most Western languages that use spaces between words like English. However, such a technique usually falls short when dealing with non-whitespace languages where word boundaries are ambiguous or absent, which are particularly common for Asian language, namely Japanese, Chinese, and Thai.
 - **Character-level tokenization**
 - **subword-level tokenization**
 

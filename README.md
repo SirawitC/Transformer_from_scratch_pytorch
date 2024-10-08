@@ -21,6 +21,7 @@ This repository provides a step-by-step implementation of the Transformer archit
   - [Decoder](#Decoder)
 - [Training Loop](#Training-Loop)
 - [Inference](#Inference)
+- [Setup](#setup)
 - [License](#license)
 
 ## Introduction
@@ -287,6 +288,49 @@ def train_model(config):
 ```
 
 ## Inference
+
+## Setup
+
+### Prerequisites
+
+Ensure you have the following installed:
+
+- **Python 3.9+**
+- **PyTorch** (`torch` and `torchvision`)
+- **Numpy**
+- **Matplotlib** (for visualizations)
+
+### Installation
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/SirawitC/Transformer_from_scratch_pytorch.git
+   cd Transformer_from_scratch_pytorch
+   ```
+
+2. **Create a virtual environment:**
+
+   ```bash
+   python -m venv env
+   source env/bin/activate  # Linux/Mac
+   env\Scripts\activate  # Windows
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Running the Project
+
+After installation, you can run the training script as follows:
+
+```bash
+python train.py
+```
+
+Adjust parameters and configurations in `config.py` to experiment with different model settings.
 
 ## License
 

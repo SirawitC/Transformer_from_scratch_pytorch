@@ -296,9 +296,6 @@ def train_model(config):
 Ensure you have the following installed:
 
 - **Python 3.9+**
-- **PyTorch** (`torch` and `torchvision`)
-- **Numpy**
-- **Matplotlib** (for visualizations)
 
 ### Installation
 

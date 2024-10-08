@@ -51,9 +51,16 @@ Here are 3 main types of tokenizer.
 
 ### Input Embedding
 
+Subsequent to the tokenization process, any given input text can be breakdown into multiple token or word. In this textual form, each token still cannot be comprehend by the computer. Therefore, we must transform these sequences of token into machine readable format, specifically a vector of numbers. To do so first we map each textual token into a unique ID represented in a form of integer, then passing it through the Embedding layer (very simialr to linear layer). As a result, we derive a vector corresponding to each token.
+
 <p align="center">
   <img src="./img/input_embed.png" alt="input_embed" width="700"/>
 </p>
+<b><i><p align="center">An example of input and output of embeding layer</p></i></b>
+
+Notice that, from the figure, the same word 'dog' is assigned to the same token ID and hence having the same vector embedding output. This imply that, with solely the input embedding technique, it is not yet possible to distingush the same word regarding its order/position within the input sequence. This limitation give rise to the need for developing the next component, the positional encoding.
+
+**Input embedding implementation**
 
 ```python
 class InputEmbedding(nn.Module):

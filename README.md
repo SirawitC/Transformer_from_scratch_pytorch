@@ -67,7 +67,7 @@ Subsequent to the tokenization process, input text will be broken down into mult
 </p>
 <b><i><p align="center">An example of input and output of embeding layer</p></i></b>
 
-Notice that, from the figure, the same word 'dog' is assigned to the same token ID and hence having the same vector embedding output. This imply that, with solely the input embedding technique, it is not yet possible to distingush the same word regarding its order/position within the input sequence. This limitation give rise to the need for developing the next component, the positional encoding.
+From the figure, we can see that the word "dog" is assigned the same token ID and vector embedding each time it appears, regardless of its position in the sequence. This means that using only input embeddings, the model cannot distinguish between instances of the same word based on their order in the sequence. In fact, the model has no understanding of the order of any tokens whatsoever because transformers process all tokens in parallel, without an inherent sense of sequence. This limitation highlights the need for positional encoding, the next crucial component.
 
 **Input embedding implementation**
 

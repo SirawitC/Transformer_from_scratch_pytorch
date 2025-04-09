@@ -12,7 +12,7 @@ This repository provides a step-by-step implementation of the Transformer archit
   - [Input Embedding](#Input-Embedding)
   - [Positional Encoding](#Positional-Encoding)
   - [Multi-Head Attention](#Multi-Head-Attention)
-  - [FeedForward Block](#FeedForward-Block)
+  - [Feedforward Block](#Feedforward-Block)
   - [Residual Connection](#Residual-Connection)
   - [Layer Normalization](#Layer-Normalization)
   - [Projection Layer](#projection-layer)
@@ -68,7 +68,7 @@ Subsequent to the tokenization process, input text will be broken down into mult
 
 From the figure, we can see that the word "dog" is assigned the same token ID and vector embedding each time it appears, regardless of its position in the sequence. This means that using only input embeddings, the model cannot distinguish between instances of the same word based on their order in the sequence. In fact, the model has no understanding of the order of any tokens whatsoever because transformers process all tokens in parallel, without an inherent sense of sequence. This limitation highlights the need for positional encoding, the next crucial component.
 
-**Input embedding implementation**
+**Input Embedding Implementation**
 
 ```python
 class InputEmbedding(nn.Module):
@@ -89,6 +89,8 @@ PE(pos, 2i) = sin(\frac{pos}{10000^{\frac{2i}{d_{model}}}}) \\ \\
 PE(pos, 2i+1) = cos(\frac{pos}{10000^{\frac{2i}{d_{model}}}})
 \end{aligned}
 ```
+
+**Positional Encoding Implementtion**
 
 ```python
 class PositionalEncoding(nn.Module):
@@ -116,6 +118,25 @@ class PositionalEncoding(nn.Module):
 ```
 
 ### Multi-Head Attention
+
+Then, the component that can be considered the heart of the transformer model is the multi-head attention. But in order to understand the actual algorithm behind this mechanism, first we need to understand the scaled dot-product attention, which is a special self-attention mechanism proposed in the paper _Attention Is All You Need_.
+
+**Scaled Dot-product Attention**
+
+```math
+Attention(Q,K,V) =softmax(\frac{QK^T}{\sqrt{d_k}})V
+```
+
+**Multi-Head Attention**
+
+```math
+\begin{aligned}
+MultiHead(Q,K,V) &= Concat(head_1, ... , head_h)W^O \\
+& where \ head_i = Attention(QW^Q_i, KW^K_i, VW^V_i)
+\end{aligned}
+```
+
+**Multi-Head Attention Block Implementtion**
 
 ```python
 class MultiHeadAttentionBlock(nn.Module):
@@ -166,7 +187,9 @@ class MultiHeadAttentionBlock(nn.Module):
         return self.w_o(x)
 ```
 
-### FeedForward Block
+### Feedforward Block
+
+**Feedforward Block Implementation**
 
 ```python
 class FeedForwardBlock(nn.Module):
@@ -186,6 +209,8 @@ class FeedForwardBlock(nn.Module):
 
 ### Residual Connection
 
+**Residual Connection Implementation**
+
 ```python
 class ResidualConnection(nn.Module):
     def __init__(self, dropout: float) -> None:
@@ -198,6 +223,8 @@ class ResidualConnection(nn.Module):
 ```
 
 ### Layer Normalization
+
+**Layer Normalization Implementation**
 
 ```python
 class LayerNormalization(nn.Module):
@@ -214,6 +241,8 @@ class LayerNormalization(nn.Module):
 ```
 
 ### Projection Layer
+
+**Projection Layer Implementation**
 
 ```python
 class ProjectionLayer(nn.Module):

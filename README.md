@@ -52,11 +52,10 @@ Here are 3 main types of tokenizer.
 - **Character-level tokenization** splits text into individual characters. This implies that the vocabulary size of this technique could be as small as the number of distinct characters in each language with some extra symbols like digits, punctuation marks, etc. In addition, this approach can also handle any text, including rare, unseen, or out-of-vocabulary (OOV) words, because it breaks words down into individual characters. Nevertheless, it comes with the consequence of requiring much longer token sequences compared to other tokenization techniques. Besides, it is apparent that by employing such a maneuver the input text will surely lose its semantic meaning since individual characters carry little to no semantic meaning by themselves, thus it is harder for the model to capture higher-level relationships and require more training data.
 
   > **Example:** "The cat is sleeping." would be tokenized as: ["T", "h", "e", " ", "c", "a", "t", " ", "i", "s", " ", "s", "l", "e", "e", "p", "i", "n", "g", "."]
-  
+
 - **subword-level tokenization** splits text into a chuck, normally smaller than words, called subwords. This technique strikes a balance between word- and character-level tokenization, featuring a manageable vocabulary size and the ability to handle out-of-vocabulary (OOV) words by breaking them into smaller, meaningful subunits. It works well across different languages and is efficient in capturing morphological structures while maintaining reasonable sequence lengths. However, it can produce ambiguous tokenization results depending on the method and may still struggle with rare subwords. Additionally, training subword tokenizers is resource-intensive, and the resulting tokens can be less interpretable compared to word-level tokens.
 
   > **Example:** "The cat is sleeping." would be tokenized as: ["The", "cat", "is", "sleep", "ing", "."]
-
 
 ### Input Embedding
 
@@ -231,7 +230,171 @@ class ProjectionLayer(nn.Module):
 
 ### Encoder
 
+```python
+class EncoderBlock(nn.Module):
+    """ Create an instance for encoder block component.
+
+    Create a encoder block with self attention and feed forward block.
+
+    Attributes:
+        self_attention_block: A MultiHeadAttentionBlock layer.
+        feed_forward_block: A FeedForwardBlock layer.
+        residual_connection: A ResidualConnection layer.
+    """
+    def __init__(self, self_attention_block: MultiHeadAttentionBlock, feed_forward_block: FeedForwardBlock, dropout: float) -> None:
+        """ Initialize the encoder block layer.
+
+        Args:
+            self_attention_block: A MultiHeadAttentionBlock layer.
+            feed_forward_block: A FeedForwardBlock layer.
+            dropout: A Float representing the dropout rate.
+        """
+        super().__init__()
+        self.self_attention_block = self_attention_block
+        self.feed_forward_block = feed_forward_block
+        self.residual_connection = nn.ModuleList([ResidualConnection(dropout) for _ in range(2)])
+
+    def forward(self, x, src_mask):
+        """ Forward function for encoder block layer.
+
+        This function will pass the input through multi-head attention, feed forward block and perform the residual connection.
+
+        Args:
+            x: A tensor representing the input.
+            src_mask: A tensor representing the source mask.
+
+        Returns:
+            A tensor representing the output of the encoder block layer.
+        """
+        x = self.residual_connection[0](x, lambda x: self.self_attention_block(x, x, x, src_mask))
+        x = self.residual_connection[1](x, self.feed_forward_block)
+        return x
+```
+
+```python
+class Encoder(nn.Module):
+    """ Create an instance for encoder component.
+
+    Create a encoder with multiple encoder block.
+
+    Attributes:
+        layers: A ModuleList of EncoderBlock layers.
+        norm: A LayerNormalization layer.
+    """
+    def __init__(self, layers: nn.ModuleList) -> None:
+        """ Initialize the encoder layer.
+
+        Args:
+            layers: A ModuleList of EncoderBlock layers.
+        """
+        super().__init__()
+        self.layers = layers
+        self.norm  = LayerNormalization()
+
+    def forward(self, x, mask):
+        """ Forward function for encoder layer.
+
+        This function will pass the input through multiple encoder block and perform the layer normalization.
+
+        Args:
+            x: A tensor representing the input.
+            mask: A tensor representing the source mask.
+
+        Returns:
+            A tensor representing the output of the encoder layer.
+        """
+        for layer in self.layers:
+            x = layer(x, mask)
+        return self.norm(x)
+```
+
 ### Decoder
+
+```python
+class DecoderBlock(nn.Module):
+    """ Create an instance for decoder block component.
+
+    Create a decoder block with self attention, cross attention, feed forward block, and the residual connection.
+
+    Attributes:
+        self_attention: A MultiHeadAttentionBlock layer.
+        cross_attention: A MultiHeadAttentionBlock layer.
+        feed_forward_block: A FeedForwardBlock layer.
+        residual_connection: A ResidualConnection layer.
+    """
+    def __init__(self, self_attention: MultiHeadAttentionBlock, cross_attention: MultiHeadAttentionBlock, feed_forward_block: FeedForwardBlock, dropout: float) -> None:
+        """ Initialize the decoder block layer.
+
+        Args:
+            self_attention: A MultiHeadAttentionBlock layer.
+            cross_attention: A MultiHeadAttentionBlock layer.
+            feed_forward_block: A FeedForwardBlock layer.
+            dropout: A Float representing the dropout rate.
+        """
+        super().__init__()
+        self.self_attention = self_attention
+        self.cross_attention = cross_attention
+        self.feed_forward_block = feed_forward_block
+        self.residual_connection = nn.ModuleList([ResidualConnection(dropout) for _ in range(3)])
+
+    def forward(self, x, encoder_output, src_mask, tgt_mask):
+        """ Forward function for decoder block layer.
+
+        This function will pass the input through multiple attention and feed forward block, and perform the residual connection.
+
+        Args:
+            x: A tensor representing the input.
+            encoder_output: A tensor representing the output of the encoder layer.
+            src_mask: A tensor representing the source mask.
+            tgt_mask: A tensor representing the target mask.
+
+        Returns:
+            A tensor representing the output of the decoder block layer.
+        """
+        x = self.residual_connection[0](x, lambda x: self.self_attention(x, x, x, tgt_mask))
+        x = self.residual_connection[1](x, lambda x: self.cross_attention(x, encoder_output, encoder_output, src_mask))
+        x = self.residual_connection[2](x, self.feed_forward_block)
+        return x
+```
+
+```python
+class Decoder(nn.Module):
+    """ Create an instance for decoder component.
+
+    Create a decoder with multiple decoder block.
+
+    Attributes:
+        layers: A ModuleList of DecoderBlock layers.
+        norm: A LayerNormalization layer.
+    """
+    def __init__(self, layers: nn.ModuleList) -> None:
+        """ Initialize the decoder layer.
+
+        Args:
+            layers: A ModuleList of DecoderBlock layers.
+        """
+        super().__init__()
+        self.layers = layers
+        self.norm = LayerNormalization()
+
+    def forward(self, x, encoder_output, src_mask, tgt_mask):
+        """ Forward function for decoder layer.
+
+        This function will pass the input through multiple decoder block, and perform the layer normalization.
+
+        Args:
+            x: A tensor representing the input.
+            encoder_output: A tensor representing the output of the encoder layer.
+            src_mask: A tensor representing the source mask.
+            tgt_mask: A tensor representing the target mask.
+
+        Returns:
+            A tensor representing the output of the decoder layer.
+        """
+        for layer in self.layers:
+            x = layer(x, encoder_output, src_mask, tgt_mask)
+        return self.norm(x)
+```
 
 ## Training Loop
 

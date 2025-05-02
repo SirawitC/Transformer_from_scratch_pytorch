@@ -84,13 +84,18 @@ class InputEmbedding(nn.Module):
 ### Positional Encoding
 Positional encoding, as its name implies, is a component responsible for telling the model the sequence with which each token occurs in the sentence. There are various ways to implement this part, but here, to align with the original paper by Vaswani et al., we will implement such a component using a technique called "sinusoidal positional encoding." This approach can be considered a static positional encoding method, meaning it only needs to be computed once and can be reused across all sentences and phases—both during training and inference. Moreover, the paper also claimed that this method allows the model to extrapolate to a sequence length longer than those observed in the training phase.
 
-Now let's see, mathmatically how it compute from equations below.
+Now let's see, mathematically, how it is computed from the equations below.
 ```math
 \begin{aligned}
 PE(pos, 2i) = sin(\frac{pos}{10000^{\frac{2i}{d_{model}}}}) \\ \\
 PE(pos, 2i+1) = cos(\frac{pos}{10000^{\frac{2i}{d_{model}}}})
 \end{aligned}
 ```
+where $pos$ indicates the position in which each token resides within the sentence, $2i$ and $2i+1$ denote the even and odd elements of the vector, respectively, and $d_{model}$ demonstrates the length or dimension of the embedding vector, which is set as 512 according to the original paper.       
+<p align="center">
+  <img src="./img/position_encoding.png" alt="input_embed" width="700"/>
+</p>
+<b><i><p align="center">An illustration of positional encoding procedure</p></i></b>
 
 **Positional Encoding Implementtion**
 

@@ -132,7 +132,7 @@ Then, the component that can be considered the heart of the transformer model is
 
 **Scaled Dot-product Attention**
 
-Scaled Dot-product attention introduced in _Attention Is All You Need_ is very similar to the Dot-product attention algorithm. The only difference lies in the scaling factor $\frac{1}{\sqrt d_k}$ (dimension of keys). This scaling factor is important to mitigate the possible gradient vanishing problem, arising from the high dot product value that causes the output of the softmax function to have a minuscule gradient.
+Scaled Dot-product attention introduced in "_Attention Is All You Need_" is very similar to the Dot-product attention algorithm. The only difference lies in the scaling factor $\frac{1}{\sqrt d_k}$ (dimension of keys). This scaling factor is important to mitigate the possible gradient vanishing problem, arising from the high dot product value that causes the output of the softmax function to have a minuscule gradient.
 
 This function processes queries (Q), keys (K), and values (V) by computing dot products between queries and keys, scaling by $\frac{1}{\sqrt d_k}$, applying softmax to generate a probability distribution, and finally creating a weighted sum of values. This mechanism outperforms traditional dot-product attention for large dimension of keys ($d_k$) while maintaining computational efficiency through optimized matrix operations, making it faster and more space-efficient than alternative approaches like additive attention that use feed-forward networks for compatibility functions.
 

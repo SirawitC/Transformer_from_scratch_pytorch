@@ -22,6 +22,7 @@ This repository provides a step-by-step implementation of the Transformer archit
 - [Training Loop](#Training-Loop)
 - [Inference](#Inference)
 - [Setup](#setup)
+- [Refernces](#references)
 - [License](#license)
 
 ## Introduction
@@ -93,7 +94,9 @@ PE(pos, 2i) = sin(\frac{pos}{10000^{\frac{2i}{d_{model}}}}) \\ \\
 PE(pos, 2i+1) = cos(\frac{pos}{10000^{\frac{2i}{d_{model}}}})
 \end{aligned}
 ```
-where $pos$ indicates the position in which each token resides within the sentence, $2i$ and $2i+1$ denote the even and odd elements of the vector, respectively, and $d_{model}$ demonstrates the length or dimension of the embedding vector, which is set as 512 according to the original paper.       
+
+where $pos$ indicates the position in which each token resides within the sentence, $2i$ and $2i+1$ denote the even and odd elements of the vector, respectively, and $d_{model}$ demonstrates the length or dimension of the embedding vector, which is set as 512 according to the original paper.
+
 <p align="center">
   <img src="./img/position_encoding.png" alt="input_embed" width="700"/>
 </p>
@@ -556,6 +559,10 @@ python train.py
 ```
 
 Adjust parameters and configurations in `config.py` to experiment with different model settings.
+
+## References
+
+[1] Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., & Polosukhin, I. (2017). [Attention is all you need](https://papers.nips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf). In _Advances in Neural Information Processing Systems 30 (NeurIPS 2017)_.
 
 ## License
 

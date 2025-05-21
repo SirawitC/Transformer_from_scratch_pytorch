@@ -143,6 +143,11 @@ This function processes queries (Q), keys (K), and values (V) by computing dot p
 Attention(Q,K,V) =softmax(\frac{QK^T}{\sqrt{d_k}})V
 ```
 
+<p align="center">
+  <img src="./img/scale_dot_product_attention.png" alt="self_attention" width="700"/>
+</p>
+<b><i><p align="center">An illustration of Scaled Dot-product Attention</p></i></b>
+
 **Multi-Head Attention**
 
 ```math

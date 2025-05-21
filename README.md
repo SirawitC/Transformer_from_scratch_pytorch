@@ -82,9 +82,11 @@ class InputEmbedding(nn.Module):
 ```
 
 ### Positional Encoding
+
 Positional encoding, as its name implies, is a component responsible for telling the model the sequence with which each token occurs in the sentence. There are various ways to implement this part, but here, to align with the original paper by Vaswani et al., we will implement such a component using a technique called "sinusoidal positional encoding." This approach can be considered a static positional encoding method, meaning it only needs to be computed once and can be reused across all sentences and phases—both during training and inference. Moreover, the paper also claimed that this method allows the model to extrapolate to a sequence length longer than those observed in the training phase.
 
 Now let's see, mathematically, how it is computed from the equations below.
+
 ```math
 \begin{aligned}
 PE(pos, 2i) = sin(\frac{pos}{10000^{\frac{2i}{d_{model}}}}) \\ \\
@@ -129,6 +131,9 @@ class PositionalEncoding(nn.Module):
 Then, the component that can be considered the heart of the transformer model is the multi-head attention. But in order to understand the actual algorithm behind this mechanism, first we need to understand the scaled dot-product attention, which is a special self-attention mechanism proposed in the paper _Attention Is All You Need_.
 
 **Scaled Dot-product Attention**
+Scaled Dot-product attention introduced in _Attention Is All You Need_ is very similar to the Dot-product attention algorithm. The only difference lies in the scaling factor $\frac{1}{\sqrt d_k}$ (dimension of keys). This scaling factor is important to mitigate the possible gradient vanishing problem, arising from the high dot product value that causes the output of the softmax function to have a minuscule gradient.
+
+This function processes queries (Q), keys (K), and values (V) by computing dot products between queries and keys, scaling by $\frac{1}{\sqrt d_k}$, applying softmax to generate a probability distribution, and finally creating a weighted sum of values. This mechanism outperforms traditional dot-product attention for large dimension of keys ($d_k$) while maintaining computational efficiency through optimized matrix operations, making it faster and more space-efficient than alternative approaches like additive attention that use feed-forward networks for compatibility functions.
 
 ```math
 Attention(Q,K,V) =softmax(\frac{QK^T}{\sqrt{d_k}})V

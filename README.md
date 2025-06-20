@@ -53,13 +53,13 @@ Here are 3 main types of tokenizer.
 
   > **Example:** "The cat is sleeping." would be tokenized as: ["T", "h", "e", " ", "c", "a", "t", " ", "i", "s", " ", "s", "l", "e", "e", "p", "i", "n", "g", "."]
 
-- **subword-level tokenization** splits text into a chuck, normally smaller than words, called subwords. This technique strikes a balance between word- and character-level tokenization, featuring a manageable vocabulary size and the ability to handle out-of-vocabulary (OOV) words by breaking them into smaller, meaningful subunits. It works well across different languages and is efficient in capturing morphological structures while maintaining reasonable sequence lengths. However, it can produce ambiguous tokenization results depending on the method and may still struggle with rare subwords. Additionally, training subword tokenizers is resource-intensive, and the resulting tokens can be less interpretable compared to word-level tokens.
+- **Subword-level tokenization** splits text into a chuck, normally smaller than words, called subwords. This technique strikes a balance between word- and character-level tokenization, featuring a manageable vocabulary size and the ability to handle out-of-vocabulary (OOV) words by breaking them into smaller, meaningful subunits. It works well across different languages and is efficient in capturing morphological structures while maintaining reasonable sequence lengths. However, it can produce ambiguous tokenization results depending on the method and may still struggle with rare subwords. Additionally, training subword tokenizers is resource-intensive, and the resulting tokens can be less interpretable compared to word-level tokens.
 
   > **Example:** "The cat is sleeping." would be tokenized as: ["The", "cat", "is", "sleep", "ing", "."]
 
 ### Input Embedding
 
-Subsequent to the tokenization process, input text will be broken down into multiple tokens or words. In this textual form, each token still cannot be comprehended by the computer. Therefore, we must transform these sequences of tokens into a machine-readable format, specifically a vector of numbers. To do so first we map each textual token into a unique ID represented in the form of integer, then pass it through the Embedding layer (very similar to linear layer). As a result, we derive a vector corresponding to each token.
+Subsequent to the tokenization process, input text will be broken down into multiple tokens or words. In this textual form, each token still cannot be comprehended by the computer. Therefore, we must transform these sequences of tokens into a machine-readable format, specifically a vector of numbers. To do so first we map each textual token into a unique ID represented in the form of integer, then pass it through the Embedding layer (very similar to linear layer in neural network). As a result, we derive a vector corresponding to each token.
 
 <p align="center">
   <img src="./img/input_embed.png" alt="input_embed" width="700"/>
@@ -209,6 +209,8 @@ class MultiHeadAttentionBlock(nn.Module):
 ```
 
 ### Feedforward Block
+
+Another crucial component in both the encoder and decoder of the Transformer architecture is the feedforward block. Each of these blocks contains two fully connected feedforward layers (linear layers) with a ReLU activation function in between. Notice that in the original paper, this component is referred to as the "position-wise feedforward network". This name simply indicates that this component takes each token (position in the input sequence) as input and processes it independently, while using the same linear transformation (same network weights and biases) across all positions. The default parameters according to the original paper are: dimensionality of input and output $(d_{model})$ is 512, and dimensionality of the hidden layer $(d_{ff})$ is 2048.
 
 **Feedforward Block Implementation**
 

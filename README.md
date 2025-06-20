@@ -20,7 +20,6 @@ This repository provides a step-by-step implementation of the Transformer archit
   - [Encoder](#Encoder)
   - [Decoder](#Decoder)
 - [Training Loop](#Training-Loop)
-- [Inference](#Inference)
 - [Setup](#setup)
 - [Refernces](#references)
 - [License](#license)
@@ -522,8 +521,6 @@ def train_model(config):
             'global_step': global_step
         }, model_filename)
 ```
-
-## Inference
 
 ## Setup
 

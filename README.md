@@ -131,6 +131,7 @@ class PositionalEncoding(nn.Module):
 ### Multi-Head Attention
 
 Then, the component that can be considered the heart of the transformer model is the multi-head attention. You may wonder why this technique is so important, and my answer is that it enables the model to relate each word in the sequence to the others, or, in essence, allows for contextual understanding. But in order to understand the actual algorithm behind this mechanism, first we need to understand the scaled dot-product attention, which is a special self-attention mechanism proposed in the paper _Attention Is All You Need_.
+
 **Scaled Dot-product Attention**
 
 Scaled Dot-product attention is very similar to the Dot-product attention algorithm, which was introduced some time before the transformer. The only difference lies in the scaling factor $1/\sqrt d_k$, where $d_k$ is the dimension of the key vectors. This scaling factor is important to mitigate the possible gradient vanishing problem, arising from the high dot product value that causes the output of the softmax function to have a minuscule gradient.

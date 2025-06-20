@@ -130,13 +130,12 @@ class PositionalEncoding(nn.Module):
 
 ### Multi-Head Attention
 
-Then, the component that can be considered the heart of the transformer model is the multi-head attention. But in order to understand the actual algorithm behind this mechanism, first we need to understand the scaled dot-product attention, which is a special self-attention mechanism proposed in the paper _Attention Is All You Need_.
-
+Then, the component that can be considered the heart of the transformer model is the multi-head attention. You may wonder why this technique is so important, and my answer is that it enables the model to relate each word in the sequence to the others, or, in essence, allows for contextual understanding. But in order to understand the actual algorithm behind this mechanism, first we need to understand the scaled dot-product attention, which is a special self-attention mechanism proposed in the paper _Attention Is All You Need_.
 **Scaled Dot-product Attention**
 
-Scaled Dot-product attention introduced in "_Attention Is All You Need_" is very similar to the Dot-product attention algorithm. The only difference lies in the scaling factor $1/\sqrt d_k$ (dimension of keys). This scaling factor is important to mitigate the possible gradient vanishing problem, arising from the high dot product value that causes the output of the softmax function to have a minuscule gradient.
+Scaled Dot-product attention is very similar to the Dot-product attention algorithm, which was introduced some time before the transformer. The only difference lies in the scaling factor $1/\sqrt d_k$, where $d_k$ is the dimension of the key vectors. This scaling factor is important to mitigate the possible gradient vanishing problem, arising from the high dot product value that causes the output of the softmax function to have a minuscule gradient.
 
-This function processes queries (Q), keys (K), and values (V) by computing dot products between queries and keys, scaling by $1/\sqrt d_k$, applying softmax to generate a probability distribution, and finally creating a weighted sum of values. This mechanism outperforms traditional dot-product attention for large dimension of keys ($d_k$) while maintaining computational efficiency through optimized matrix operations, making it faster and more space-efficient than alternative approaches like additive attention that use feed-forward networks for compatibility functions.
+This function processes queries (Q), keys (K), and values (V) by computing dot products (matrix multiplication) between queries matrix and the transposed keys matrix, scaling by $1/\sqrt d_k$, applying softmax to generate a probability distribution, and finally performing matrix multiplication between such matrix and values matrix. This mechanism outperforms traditional dot-product attention for large dimensions of keys ($d_k$) while maintaining computational efficiency through optimized matrix operations, making it faster and more space-efficient than alternative approaches like additive attention that use feed-forward networks for compatibility functions.
 
 ```math
 Attention(Q,K,V) =softmax(\frac{QK^T}{\sqrt{d_k}})V
@@ -148,6 +147,8 @@ Attention(Q,K,V) =softmax(\frac{QK^T}{\sqrt{d_k}})V
 <b><i><p align="center">An illustration of Scaled Dot-product Attention</p></i></b>
 
 **Multi-Head Attention**
+
+Building upon the previously discussed scaled dot-product attention, the transformer extends this concept to have multiple scaled dot-product attentions in parallel (a.k.a heads), hence the name "Multi-Head Attention." This allows the model to attend to information from different parts of the embedding dimension, thereby enhancing the model's robustness and ability to capture diverse contextual relationships.   
 
 ```math
 \begin{aligned}

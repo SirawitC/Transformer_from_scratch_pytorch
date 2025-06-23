@@ -136,7 +136,7 @@ Then, the component that can be considered the heart of the transformer model is
 
 Scaled Dot-product attention is very similar to the Dot-product attention algorithm, which was introduced some time before the transformer. The only difference lies in the scaling factor $1/\sqrt d_k$, where $d_k$ is the dimension of the key vectors. This scaling factor is important to mitigate the possible gradient vanishing problem, arising from the high dot product value that causes the output of the softmax function to have a minuscule gradient.
 
-This function processes queries (Q), keys (K), and values (V) by computing dot products (matrix multiplication) between queries matrix and the transposed keys matrix, scaling by $1/\sqrt d_k$, applying softmax to generate a probability distribution, and finally performing matrix multiplication between such matrix and values matrix. This mechanism outperforms traditional dot-product attention for large dimensions of keys ($d_k$) while maintaining computational efficiency through optimized matrix operations, making it faster and more space-efficient than alternative approaches like additive attention that use feed-forward networks for compatibility functions.
+This function processes queries (Q), keys (K), and values (V) by computing dot products (matrix multiplication) between queries matrix and the transposed keys matrix, scaling by $1/\sqrt d_k$, applying softmax to generate a probability distribution, and finally performing matrix multiplication between such matrix and values matrix. This mechanism outperforms traditional dot-product attention for large dimensions of keys ($d_k$) while maintaining computational efficiency through optimized matrix operations, making it faster and more space-efficient than alternative approaches like additive attention that use feed-forward networks for compatibility functions. 
 
 ```math
 Attention(Q,K,V) =softmax(\frac{QK^T}{\sqrt{d_k}})V
@@ -146,6 +146,8 @@ Attention(Q,K,V) =softmax(\frac{QK^T}{\sqrt{d_k}})V
   <img src="./img/scale_dot_product_attention.png" alt="self_attention" width="700"/>
 </p>
 <b><i><p align="center">An illustration of Scaled Dot-product Attention</p></i></b>
+
+But upon looking at the diagram, you may wonder where these fancy-named matrices (Query, Key, and Value) come from. What values are actually contained in such matrices? If that's the case, don't feel discouraged. I struggled with that for quite some time as well. The reason is that in the original paper, they never explicitly define these matrices anywhere. Therefore, I will save you the trouble and provide a definition for these matrices here. The query, key, and value matrices are just three exact duplicates of the input matrix, and that's about it, simple as that.   
 
 **Multi-Head Attention**
 

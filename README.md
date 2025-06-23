@@ -1,6 +1,6 @@
 ﻿# Transformer from scratch using Pytorch
 
-This repository provides a step-by-step implementation of the Transformer architecture from scratch using PyTorch. The Transformer model, introduced in the seminal paper "Attention is All You Need," has become the foundation for state-of-the-art natural language processing (NLP) models such as BERT and GPT. In this repository, we break down the core components of the Transformer, including multi-head self-attention, positional encoding, and layer normalization, offering a clear and intuitive understanding of how the model functions. Whether you're a student or researcher looking to deepen your understanding of Transformers or an engineer exploring custom implementations, this repository will guide you through the essential building blocks of this powerful architecture.
+This repository provides a step-by-step implementation of the Transformer architecture from scratch using PyTorch. The Transformer model, introduced in the seminal paper "Attention is All You Need," [[1]](#references) has become the foundation for state-of-the-art natural language processing (NLP) models such as BERT and GPT. In this repository, we break down the core components of the Transformer, including multi-head self-attention, positional encoding, and layer normalization, offering a clear and intuitive understanding of how the model functions. Whether you're a student or researcher looking to deepen your understanding of Transformers or an engineer exploring custom implementations, this repository will guide you through the essential building blocks of this powerful architecture.
 
 > This repository is heavily inspired by the YouTube video by [Umar Jamil](https://www.youtube.com/@umarjamilai), and we would really like to acknowledge his valuable contribution to making Transformers accessible to a broader audience.
 
@@ -83,7 +83,7 @@ class InputEmbedding(nn.Module):
 
 ### Positional Encoding
 
-Positional encoding, as its name implies, is a component responsible for telling the model the sequence with which each token occurs in the sentence. There are various ways to implement this part, but here, to align with the original paper by Vaswani et al., we will implement such a component using a technique called "sinusoidal positional encoding." This approach can be considered a static positional encoding method, meaning it only needs to be computed once and can be reused across all sentences and phases—both during training and inference. Moreover, the paper also claimed that this method allows the model to extrapolate to a sequence length longer than those observed in the training phase.
+Positional encoding, as its name implies, is a component responsible for telling the model the sequence with which each token occurs in the sentence. There are various ways to implement this part, but here, to align with the original paper by Vaswani et al. [[1]](#references), we will implement such a component using a technique called "sinusoidal positional encoding." This approach can be considered a static positional encoding method, meaning it only needs to be computed once and can be reused across all sentences and phases—both during training and inference. Moreover, the paper also claimed that this method allows the model to extrapolate to a sequence length longer than those observed in the training phase.
 
 Now let's see, mathematically, how it is computed from the equations below.
 
@@ -230,6 +230,8 @@ class FeedForwardBlock(nn.Module):
 ```
 
 ### Residual Connection
+
+Residual connections, also known as skip connections, are a special mechanism that allows information and gradients to bypass one or more computational layers. This technique was developed to tackle issues in the training process of very deep learning networks, particularly the vanishing gradient problem, and became widely popular following the introduction of ResNet [[2]](#references) in 2015.
 
 **Residual Connection Implementation**
 
@@ -567,6 +569,8 @@ Adjust parameters and configurations in `config.py` to experiment with different
 ## References
 
 [1] Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., & Polosukhin, I. (2017). [Attention is all you need](https://papers.nips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf). In _Advances in Neural Information Processing Systems 30 (NeurIPS 2017)_.
+
+[2] He, K., Zhang, X., Ren, S., & Sun, J. (2016). [Deep residual learning for image recognition](https://ieeexplore.ieee.org/document/7780459). In Proceedings of the _IEEE conference on computer vision and pattern recognition_ (pp. 770-778).
 
 ## License
 

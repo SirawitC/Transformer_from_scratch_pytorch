@@ -161,6 +161,11 @@ MultiHead(Q,K,V) &= Concat(head_1, ... , head_h)W^O \\
 \end{aligned}
 ```
 
+<p align="center">
+  <img src="./img/Multihead_attention.png" alt="self_attention" width="700"/>
+</p>
+<b><i><p align="center">An illustration of Multi-Head Attention</p></i></b>
+
 **Multi-Head Attention Block Implementtion**
 
 ```python

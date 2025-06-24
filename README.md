@@ -162,7 +162,7 @@ MultiHead(Q,K,V) &= Concat(head_1, ... , head_h)W^O \\
 ```
 
 <p align="center">
-  <img src="./img/Multihead_attention.png" alt="self_attention" width="700"/>
+  <img src="./img/Multihead_attention.png" alt="self_attention" width="850"/>
 </p>
 <b><i><p align="center">An illustration of Multi-Head Attention</p></i></b>
 

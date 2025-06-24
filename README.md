@@ -290,6 +290,8 @@ class ProjectionLayer(nn.Module):
 
 Now, let us integrate all the components mentioned previously into a unified Transformer architecture. The Transformer model consists of two main parts: the encoder and the decoder. Each of these components is constructed from a stack of 6 identical layers called encoder blocks and decoder blocks, respectively. Finally, the output from the encoder-decoder architecture is passed to the projection layer to map the internal representation into vocabulary space, and then the softmax function is applied to return the probability distribution over all possible next tokens.
 
+**Transformer Implementation**
+
 ```python
 class Transformer(nn.Module):
     """ Create an instance for transformer model.
@@ -437,6 +439,8 @@ def build_transformer(src_vocab_size: int, tgt_vocab_size: int, src_seq_len: int
 
 As discussed above, the encoder consists of 6 repeating encoder blocks, each of which has two sub-layers: the multi-head attention sub-layer and the fully connected feedforward sub-layer. The residual connection was then applied to these sub-layers, followed by layer normalization.
 
+**Encoder Block Implementation**
+
 ```python
 class EncoderBlock(nn.Module):
     """ Create an instance for encoder block component.
@@ -477,6 +481,8 @@ class EncoderBlock(nn.Module):
         x = self.residual_connection[1](x, self.feed_forward_block)
         return x
 ```
+
+**Encoder Implementation**
 
 ```python
 class Encoder(nn.Module):
@@ -520,6 +526,8 @@ class Encoder(nn.Module):
 The decoder also consists of 6 repeating layers of decoder blocks. Each decoder block is very similar to the encoder block; the main difference is that the decoder block has an additional multi-head attention sub-layer that performs the attention mechanism over the encoder's output. All sub-layers in the decoder are also subject to residual connections.
 
 Note that, for the decoder part, the self-attention sub-layer is modified so that it solely attends to prior positions, ensuring that the prediction of the current position i depends solely on the known information of the output (positions less than i)
+
+**Decoder Block Implementation**
 
 ```python
 class DecoderBlock(nn.Module):
@@ -567,6 +575,8 @@ class DecoderBlock(nn.Module):
         x = self.residual_connection[2](x, self.feed_forward_block)
         return x
 ```
+
+**Decoder Implementation**
 
 ```python
 class Decoder(nn.Module):

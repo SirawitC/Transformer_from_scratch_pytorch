@@ -152,7 +152,7 @@ But upon looking at the diagram, you may wonder where these fancy-named matrices
 
 **Multi-Head Attention**
 
-Building upon the previously discussed scaled dot-product attention, the transformer extends this concept to have multiple scaled dot-product attentions in parallel (a.k.a heads), hence the name "Multi-Head Attention." This allows the model to attend to information from different parts of the embedding dimension, thereby enhancing the model's robustness and ability to capture diverse contextual relationships.
+Building upon the previously discussed scaled dot-product attention, the transformer extends this concept to have multiple scaled dot-product attentions in parallel (a.k.a heads), hence the name "Multi-Head Attention." This allows the model to attend to information from different parts of the embedding dimension, thereby enhancing the model's robustness and ability to capture diverse contextual relationships. The equation for this technique is as follows.
 
 ```math
 \begin{aligned}
@@ -160,11 +160,14 @@ MultiHead(Q,K,V) &= Concat(head_1, ... , head_h)W^O \\
 & where \ head_i = Attention(QW^Q_i, KW^K_i, VW^V_i)
 \end{aligned}
 ```
+where h signifies the number of heads, $W^Q_i \in R^{d_{model} \times d_k}$ indicates a projection matrix of the Query matrix of the $i^{th}$ head, $W^K_i \in R^{d_{model} \times d_k}$ demonstrates a projection matrix of the Key matrix of the $i^{th}$ head, $W^V_i \in R^{d_{model} \times d_v}$ illustrates a projection matrix of the Value matrix of the $i^{th}$ head, and $W^O \in R^{hd_v \times d_{model}}$ shows the projection matrix of the concatenation of all the heads. 
 
 <p align="center">
   <img src="./img/Multihead_attention.png" alt="self_attention" width="850"/>
 </p>
 <b><i><p align="center">An illustration of Multi-Head Attention</p></i></b>
+
+The Multi-head attention commences by first creating three duplicates of the input matrix, resulting in the Query (Q), Key (K), and Value (V) matrices. Then, each of these matrices will undergo a separate linear projection using different learned weight matrices for each attention head. Specifically, Q, K, and V are each projected into h lower-dimensional representations, where h is the number of attention heads, and each head learns its own set of projection weights $W^Q_i, W^K_i,$ and $W^V_i$. These projections yield $Q_1, ..., Q_h, K_1, ..., K_h, V_1, ..., V_h$ each with the size of sequence length by $d_k$ (or $d_v$) given that $d_k = d_v = d_{model}/h$. After that, each $head_i$ independently computes scaled dot-product attention (as discussed above) using its corresponding $Q_i, K_i,$ and $V_i$ matrices. Finally, the resulting attention outputs from all heads are then concatenated to form a single matrix, which is passed through a final linear projection $W^O$ to produce the final multi-head attention output.
 
 **Multi-Head Attention Block Implementtion**
 
@@ -528,9 +531,9 @@ class Encoder(nn.Module):
 
 ### Decoder
 
-The decoder also consists of 6 repeating layers of decoder blocks. Each decoder block is very similar to the encoder block; the main difference is that the decoder block has an additional multi-head attention sub-layer that performs the attention mechanism over the encoder's output. All sub-layers in the decoder are also subject to residual connections.
+The decoder also consists of 6 repeating layers of decoder blocks. Each decoder block is very similar to the encoder block; the main difference is that the decoder block has an additional multi-head attention sub-layer that performs the attention mechanism over the encoder's output, specifically using the encoder's output as Key and Value matrices, while the Query matrix comes from the output from previous layer of the decoder itself. All sub-layers in the decoder are also subject to residual connections.
 
-Note that, for the decoder part, the self-attention sub-layer is modified so that it solely attends to prior positions, ensuring that the prediction of the current position i depends solely on the known information of the output (positions less than i)
+Note that, for the decoder part, the first self-attention sub-layer is a masked multi-head self-attention, which is modified so that it solely attends to prior positions, ensuring that the prediction of the current position i depends solely on the known information of the output (positions less than i)
 
 **Decoder Block Implementation**
 

@@ -631,7 +631,7 @@ To train a Transformer model for neural machine translation, we utilize a specia
 
 During training, the input sentence in the source language is wrapped with special tokens such as the start-of-sentence (`<SOS>`) and end-of-sentence (`<EOS>`) tokens, then passed into the encoder. At the same time, the target sentence is prepended with the `<SOS>` token and fed into the decoder.
 
-The decoder generates output representations, which are then passed through a projection layer (a linear layer) that maps them from the model's internal representation space to the vocabulary space. Finally, a softmax function is applied to convert these logits into a probability distribution over the target vocabulary, thereby determine the most possible prediction for the next token.
+The transformer generates output representations, which are then passed through a projection layer (a linear layer) that maps them from the model's internal representation space to the vocabulary space. Finally, a softmax function is applied to convert these logits into a probability distribution over the target vocabulary, thereby determining the most probable prediction for the next token.
 
 Another essential point to note is that, unlike its predecessor models, such as recurrent neural networks (RNNs), during the training phase, the Transformer models process the entire input sequence in parallel. This means that each input-output pair can be processed within a single forward pass, making the training significantly more efficient. In contrast, an RNN model processes the input sequence token by token at each timestep, making it inherently slower and less efficient.
 

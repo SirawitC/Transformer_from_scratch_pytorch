@@ -152,7 +152,7 @@ But upon looking at the diagram, you may wonder where these fancy-named matrices
 
 **Multi-Head Attention**
 
-Building upon the previously discussed scaled dot-product attention, the transformer extends this concept to have multiple scaled dot-product attentions in parallel (a.k.a heads), hence the name "Multi-Head Attention." This allows the model to attend to information from different parts of the embedding dimension, thereby enhancing the model's robustness and ability to capture diverse contextual relationships.
+Building upon the previously discussed scaled dot-product attention, the transformer extends this concept to have multiple scaled dot-product attentions in parallel (a.k.a heads), hence the name "Multi-Head Attention." This allows the model to attend to information from different parts of the embedding dimension, thereby enhancing the model's robustness and ability to capture diverse contextual relationships. The equation for this technique is as follows.
 
 ```math
 \begin{aligned}

@@ -167,6 +167,8 @@ where h signifies the number of heads, $W^Q_i \in R^{d_{model} \times d_k}$ indi
 </p>
 <b><i><p align="center">An illustration of Multi-Head Attention</p></i></b>
 
+The Multi-head attention commences by first creating three duplicates of the input matrix, resulting in the Query (Q), Key (K), and Value (V) matrices. Then, each of these matrices will undergo a separate linear projection using different learned weight matrices for each attention head. Specifically, Q, K, and V are each projected into h lower-dimensional representations, where h is the number of attention heads, and each head learns its own set of projection weights $W^Q_i, W^K_i, and W^V_i$. These projections yield $Q_1, ..., Q_h, K_1, ..., K_h, V_1, ..., V_h$ each with the size of sequence length by $d_k$ (or $d_v$) given that $d_k = d_v = d_{model}/h$. After that, each head independently computes scaled dot-product attention (as discussed above) using its corresponding Q, K, and V matrices. Finally, the resulting attention outputs from all heads are then concatenated to form a single matrix, which is passed through a final linear projection $W^O$ to produce the final multi-head attention output.
+
 **Multi-Head Attention Block Implementtion**
 
 ```python

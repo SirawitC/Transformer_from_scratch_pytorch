@@ -624,6 +624,14 @@ class Decoder(nn.Module):
 
 ## Training Loop
 
+To train a Transformer model for neural machine translation, we utilize a specialized type of labeled dataset known as a parallel corpus, which comprises extensive collections of text sequences in the source language and their corresponding translations in the target language.
+
+During training, the input sentence in the source language is wrapped with special tokens such as the start-of-sentence (`<SOS>`) and end-of-sentence (`<EOS>`) tokens, then passed into the encoder. At the same time, the target sentence is prepended with the `<SOS>` token and fed into the decoder.
+
+The decoder generates output representations, which are then passed through a projection layer (a linear layer) that maps them from the model's internal representation space to the vocabulary space. Finally, a softmax function is applied to convert these logits into a probability distribution over the target vocabulary, thereby determine the most possible prediction for the next token.
+
+Another essential point to note is that, unlike its predecessor models, such as recurrent neural networks (RNNs), during the training phase, the Transformer models process the entire input sequence in parallel. This means that each input-output pair can be processed within a single forward pass, making the training significantly more efficient. In contrast, an RNN model processes the input sequence token by token at each timestep, making it inherently slower and less efficient.
+
 ```python
 def train_model(config):
     # Define the device
@@ -700,6 +708,37 @@ def train_model(config):
 ```
 
 ## Inference
+
+```python
+def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_len, device):
+    sos_idx = tokenizer_tgt.token_to_id('[SOS]')
+    eos_idx = tokenizer_tgt.token_to_id('[EOS]')
+
+    # Precompute the encoder output and reuse it for every token we get from the decoder
+    encoder_output = model.encode(source, source_mask)
+    # Initialize the decoder input with the sos token
+    decoder_input = torch.empty(1, 1).fill_(sos_idx).type_as(source).to(device)
+    while True:
+        if decoder_input.size(1) == max_len:
+            break
+
+        # Build mask for the target (decoder input)
+        decoder_mask = causal_mask(decoder_input.size(1)).type_as(source_mask).to(device)
+
+        # Calculate the output of the decoder
+        out = model.decode(encoder_output, source_mask, decoder_input, decoder_mask)
+
+        # Get the next token
+        prob = model.project(out[:, -1])
+        # Select the token with max probability
+        _, next_word = torch.max(prob, dim=1)
+        decoder_input = torch.cat([decoder_input, torch.empty(1, 1).type_as(source).fill_(next_word.item()).to(device)], dim=1)
+
+        if next_word == eos_idx:
+            break
+
+    return decoder_input.squeeze(0)
+```
 
 ## Setup
 

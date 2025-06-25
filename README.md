@@ -531,9 +531,9 @@ class Encoder(nn.Module):
 
 ### Decoder
 
-The decoder also consists of 6 repeating layers of decoder blocks. Each decoder block is very similar to the encoder block; the main difference is that the decoder block has an additional multi-head attention sub-layer that performs the attention mechanism over the encoder's output. All sub-layers in the decoder are also subject to residual connections.
+The decoder also consists of 6 repeating layers of decoder blocks. Each decoder block is very similar to the encoder block; the main difference is that the decoder block has an additional multi-head attention sub-layer that performs the attention mechanism over the encoder's output, specifically using the encoder's output as Key and Value matrices, while the Query matrix comes from the output from previous layer of the decoder itself. All sub-layers in the decoder are also subject to residual connections.
 
-Note that, for the decoder part, the self-attention sub-layer is modified so that it solely attends to prior positions, ensuring that the prediction of the current position i depends solely on the known information of the output (positions less than i)
+Note that, for the decoder part, the first self-attention sub-layer is a masked multi-head self-attention, which is modified so that it solely attends to prior positions, ensuring that the prediction of the current position i depends solely on the known information of the output (positions less than i)
 
 **Decoder Block Implementation**
 

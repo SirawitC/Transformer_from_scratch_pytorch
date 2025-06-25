@@ -160,6 +160,7 @@ MultiHead(Q,K,V) &= Concat(head_1, ... , head_h)W^O \\
 & where \ head_i = Attention(QW^Q_i, KW^K_i, VW^V_i)
 \end{aligned}
 ```
+where h signifies the number of heads, $W^Q_i \in R^{d_model X d_k}$ indicates a projection matrix of the Query matrix of the $i^{th}$ head, $W^K_i \in R^{d_model X d_k}$ demonstrates a projection matrix of the Key matrix of the $i^{th}$ head, $W^V_i \in R^{d_model X d_v}$ illustrates a projection matrix of the Value matrix of the $i^{th}$ head, and $W^O \in R^{hd_v X d_model}$ shows the projection matrix of the concatenation of all the heads. 
 
 <p align="center">
   <img src="./img/Multihead_attention.png" alt="self_attention" width="850"/>

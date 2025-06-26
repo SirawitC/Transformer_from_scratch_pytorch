@@ -160,7 +160,8 @@ MultiHead(Q,K,V) &= Concat(head_1, ... , head_h)W^O \\
 & where \ head_i = Attention(QW^Q_i, KW^K_i, VW^V_i)
 \end{aligned}
 ```
-where h signifies the number of heads, $W^Q_i \in R^{d_{model} \times d_k}$ indicates a projection matrix of the Query matrix of the $i^{th}$ head, $W^K_i \in R^{d_{model} \times d_k}$ demonstrates a projection matrix of the Key matrix of the $i^{th}$ head, $W^V_i \in R^{d_{model} \times d_v}$ illustrates a projection matrix of the Value matrix of the $i^{th}$ head, and $W^O \in R^{hd_v \times d_{model}}$ shows the projection matrix of the concatenation of all the heads. 
+
+where h signifies the number of heads, $W^Q_i \in R^{d_{model} \times d_k}$ indicates a projection matrix of the Query matrix of the $i^{th}$ head, $W^K_i \in R^{d_{model} \times d_k}$ demonstrates a projection matrix of the Key matrix of the $i^{th}$ head, $W^V_i \in R^{d_{model} \times d_v}$ illustrates a projection matrix of the Value matrix of the $i^{th}$ head, and $W^O \in R^{hd_v \times d_{model}}$ shows the projection matrix of the concatenation of all the heads.
 
 <p align="center">
   <img src="./img/Multihead_attention.png" alt="self_attention" width="850"/>
@@ -260,6 +261,20 @@ class ResidualConnection(nn.Module):
 ```
 
 ### Layer Normalization
+
+The normalization process is another crucial concept that helps learning algorithms converge more swiftly and stably. There are two popular normalization techniques utilized in the deep learning community: batch normalization and layer normalization.
+
+If you are familiar with deep learning applications in computer vision tasks, you may have heard of batch normalization. This normalization strategy, as the name implies, normalizes the information across the entire batch for each feature independently, as shown below.
+
+Although batch normalization works well for computer vision tasks, it falls short when dealing with sequence data such as text, processing data with small batch sizes, and handling variable-length sequences. The key issues with batch normalization for sequence data include:
+
+1. **Variable sequence lengths**: In NLP tasks, sentences have different lengths, making it unclear how to compute consistent normalization statistics across batches with varying sequence lengths.
+2. **Batch dependency**: Normalization statistics depend on other samples in the batch, which can lead to inconsistent behavior across different batch compositions.
+3. **Small batch size instability**: With small batches, the computed statistics become unreliable and noisy.
+
+Therefore, in 2016, a novel normalization technique called "layer normalization" [[3]](#references) was introduced to address these limitations of batch normalization, particularly for models that process sequence data such as recurrent neural networks (RNNs). Layer normalization normalizes each data point using statistics computed for that specific data point independently. Specifically, it computes the mean and variance across all features (the feature dimension) for each individual sample, rather than across the batch dimension.
+
+This approach eliminates the dependency of normalization on the batch size and composition and provides stable normalization regardless of sequence length, while still delivering the benefits of normalization for training stability and convergence speed.
 
 **Layer Normalization Implementation**
 
@@ -788,6 +803,8 @@ Adjust parameters and configurations in `config.py` to experiment with different
 [1] Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., & Polosukhin, I. (2017). [Attention is all you need](https://papers.nips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf). In _Advances in Neural Information Processing Systems 30 (NeurIPS 2017)_.
 
 [2] He, K., Zhang, X., Ren, S., & Sun, J. (2016). [Deep residual learning for image recognition](https://ieeexplore.ieee.org/document/7780459). In Proceedings of the _IEEE conference on computer vision and pattern recognition_ (pp. 770-778).
+
+[3] Ba, J. L., Kiros, J. R., & Hinton, G. E. (2016). [Layer normalization](https://arxiv.org/abs/1607.06450). arXiv preprint arXiv:1607.06450.
 
 ## License
 

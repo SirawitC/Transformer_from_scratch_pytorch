@@ -268,6 +268,11 @@ The normalization process is another crucial concept that helps learning algorit
 
 If you are familiar with deep learning applications in computer vision tasks, you may have heard of batch normalization. This normalization strategy, as the name implies, normalizes the information across the entire batch for each feature independently, as shown below.
 
+<p align="center">
+  <img src="./img/layerNorm-vs-batchNorm.png" alt="layer Norm Vs Batch Norm" width="850"/>
+</p>
+<b><i><p align="center">Layer Normalization vs Batch Normalization</p></i></b>
+
 Although batch normalization works well for computer vision tasks, it falls short when dealing with sequence data such as text, processing data with small batch sizes, and handling variable-length sequences. The key issues with batch normalization for sequence data include:
 
 1. **Variable sequence lengths**: In NLP tasks, sentences have different lengths, making it unclear how to compute consistent normalization statistics across batches with varying sequence lengths.

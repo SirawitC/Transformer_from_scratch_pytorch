@@ -830,3 +830,32 @@ Adjust parameters and configurations in `config.py` to experiment with different
 ## License
 
 This code is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+## Citation
+
+If you find our work helpful or use any part of this repository in your research, please consider citing this repository:
+
+```
+@software{sorawit_chokphantavee_2025_15744092,
+  author       = {Sorawit Chokphantavee and
+                  Sirawit Chokphantavee},
+  title        = {SirawitC/Transformer\_from\_scratch\_pytorch:
+                   Transformer from scratch pytorch
+                  },
+  month        = jun,
+  year         = 2025,
+  publisher    = {Zenodo},
+  version      = {v1.0.0},
+  doi          = {10.5281/zenodo.15744092},
+  url          = {https://doi.org/10.5281/zenodo.15744092}
+}
+```
+
+## Contributing
+
+Feel free to fork this repository and submit pull requests. Any contributions are welcome!
+
+## Author
+
+This repository was created by [Sorawit Chokphantavee](https://github.com/SorawitChok) and [Sirawit Chokphantavee](https://github.com/SirawitC).
+

@@ -631,7 +631,7 @@ class Decoder(nn.Module):
 
 To train a Transformer model for neural machine translation, we utilize a specialized type of labeled dataset known as a parallel corpus, which comprises extensive collections of text sequences in the source language and their corresponding translations in the target language.
 
-During training, the input sentence in the source language is wrapped with special tokens such as the start-of-sentence (`<SOS>`) and end-of-sentence (`<EOS>`) tokens, then passed into the encoder. At the same time, the target sentence is prepended with the `<SOS>` token and fed into the decoder.
+During training, the input sentence in the source language is wrapped with special tokens such as the start-of-sentence (`<SOS>`) and end-of-sentence (`<EOS>`) tokens, then passed into the encoder. At the same time, the target sentence is prepended with the `<SOS>` token and fed into the decoder. Note that both the input to the encoder and the decoder will also be appended with the (`<PAD>`) tokens to make the sequence length consistent across different examples in a training batch. This padding ensures that all sequences align to a uniform length, allowing for efficient batch processing. Importantly, attention masks are used so that the model does not attend to these padding positions during computation. 
 
 The transformer generates output representations, which are then passed through a projection layer (a linear layer) that maps them from the model's internal representation space to the vocabulary space. Finally, a softmax function is applied to convert these logits into a probability distribution over the target vocabulary, thereby determining the most probable prediction for the next token.
 
@@ -713,6 +713,18 @@ def train_model(config):
 ```
 
 ## Inference
+
+After understanding the process for training the Transformer model, what is left now is to learn how to use such a model, in this case, to do the neural machine translation (NMT) task. First, what we need to understand is that the Transformer model performs inference in an autoregressive manner. By autoregressive, it means that the model generates each output one step at a time, where each prediction depends on the previous outputs, or simply put, building the output token by token, unlike training, where the entire target sequence is available and processed in parallel. This step-by-step generation continues until a special end-of-sequence token (`<EOS>`) is produced or a predefined maximum sequence length is reached.
+
+The process begins by tokenizing and embedding the input sentence in the source language, before passing it to the encoder to process the whole sequence in parallel and produce a series of contextualized vector representations. These encoder outputs are computed only once and reused at every decoding step.
+
+For the decoder part, at the first time step, the input will be initialized with a sequence containing just the start-of-sequence token (`<SOS>`). At each decoding step, the decoder takes the current sequence of previously generated tokens and processes them through several layers of masked self-attention and encoder-decoder attention. Masking ensures that, at position t, the decoder cannot attend to positions t+1 or beyond, preserving the causal, autoregressive property.
+
+After computing the decoder outputs, the model applies a linear transformation followed by a softmax function to produce a probability distribution over the entire vocabulary. From this distribution, the next token is selected—commonly via argmax (greedy decoding) or beam search (for higher quality outputs). This token is then appended to the input sequence for the next decoding step.
+
+The loop repeats, with the decoder now having one more token in its input. At each step, the model reprocesses the growing sequence, always conditioned on the full encoder output and the previously predicted tokens. Once the model outputs the `<EOS>` token or reaches the maximum allowed length, the generation loop terminates. The final output sequence consists of all predicted tokens up to (but not including) `<EOS>`.
+
+In summary, Transformer inference consists of repeatedly predicting the next token one step at a time, conditioned on both the fixed encoder output and all previously generated tokens.
 
 ```python
 def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_len, device):

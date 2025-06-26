@@ -1,4 +1,6 @@
-﻿# Transformer from scratch using Pytorch
+<a href="https://doi.org/10.5281/zenodo.15744091"><img src="https://zenodo.org/badge/858530139.svg" alt="DOI"></a>
+
+# Transformer from scratch using Pytorch
 
 This repository provides a step-by-step implementation of the Transformer architecture from scratch using PyTorch. The Transformer model, introduced in the seminal paper "Attention is All You Need," [[1]](#references) has become the foundation for state-of-the-art natural language processing (NLP) models such as BERT and GPT. In this repository, we break down the core components of the Transformer, including multi-head self-attention, positional encoding, and layer normalization, offering a clear and intuitive understanding of how the model functions. Whether you're a student or researcher looking to deepen your understanding of Transformers or an engineer exploring custom implementations, this repository will guide you through the essential building blocks of this powerful architecture.
 

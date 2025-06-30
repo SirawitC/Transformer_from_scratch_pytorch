@@ -26,6 +26,9 @@ This repository provides a step-by-step implementation of the Transformer archit
 - [Setup](#setup)
 - [Refernces](#references)
 - [License](#license)
+- [Citation](#citation)
+- [Contributing](#contributing)
+- [Authors](#authors)
 
 ## Introduction
 
@@ -855,7 +858,7 @@ If you find our work helpful or use any part of this repository in your research
 
 Feel free to fork this repository and submit pull requests. Any contributions are welcome!
 
-## Author
+## Authors
 
 This repository was created by [Sorawit Chokphantavee](https://github.com/SorawitChok) and [Sirawit Chokphantavee](https://github.com/SirawitC).
 

@@ -24,7 +24,7 @@ This repository provides a step-by-step implementation of the Transformer archit
 - [Training Loop](#Training-Loop)
 - [Inference](#inference)
 - [Setup](#setup)
-- [Refernces](#references)
+- [References](#references)
 - [License](#license)
 - [Citation](#citation)
 - [Contributing](#contributing)
